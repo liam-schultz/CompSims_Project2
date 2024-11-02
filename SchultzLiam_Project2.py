@@ -58,18 +58,24 @@ def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True
     plt.ylim(-1, 7)
     plt.show()"""
 
-    #code for plotting fig 2.3
+    """#code for plotting fig 2.3
     plt.scatter(x_array, y_array, marker="P")
     plt.xlabel("Range (m)")
     plt.ylabel("Height (m)")
     plt.title("Projectile motion")
     plt.xlim(0, 250)
     plt.ylim(-10, 70)
-    plt.show()
+    plt.show()"""
 
 """#function call for plotting fig 2.2
-integrate(15, 45, 0.1, "euler", air_resistance=False)
-"""
+integrate(15, 45, 0.1, "euler", air_resistance=False)"""
 
-#function call for plotting fig 2.3 (change method parameter to euler-cromer or midpoint)
-integrate(50, 45, 0.1, "midpoint", air_resistance=True)
+"""#function call for plotting fig 2.3 (change method parameter to euler-cromer or midpoint)
+integrate(50, 45, 0.1, "midpoint", air_resistance=True)"""
+
+###Part 2
+#generate distributions
+samp_num = 100
+velocity_dist = 15*np.random.randn(samp_num)+100
+theta_dist = 10*np.random.randn(samp_num)+45
+
