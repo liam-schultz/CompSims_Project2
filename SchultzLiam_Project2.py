@@ -12,6 +12,9 @@ A = np.pi*(DIAMETER/2)**2
 def rad(theta):
     return theta*np.pi/180
 
+def mi_to_m(x):
+    return x*1609.34
+
 def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True):
     method = method.lower()
     launch_angle = rad(launch_angle)
@@ -76,6 +79,6 @@ integrate(50, 45, 0.1, "midpoint", air_resistance=True)"""
 ###Part 2
 #generate distributions
 samp_num = 100
-velocity_dist = 15*np.random.randn(samp_num)+100
+velocity_dist = mi_to_m(15*np.random.randn(samp_num)+100)
 theta_dist = 10*np.random.randn(samp_num)+45
 
