@@ -27,7 +27,7 @@ def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True
         x_array.append(x)
         y_array.append(y)
         if air_resistance:
-            a = ((-abs(v_x)*C_D*RHO*A*abs(v_x))/(2*MASS),\
+            a = ((-abs(v_x)*C_D*RHO*A*abs(v_x))/(2*MASS),
                 (-abs(v_y)*C_D*RHO*A*abs(v_y))/(2*MASS) - g)
         else:
             a = (0, -g)
@@ -52,6 +52,9 @@ def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True
     x_array.append(x)
     y_array.append(y)
 
+    #calculate range
+    return -(x_array[-1]-x_array[-2])*y_array[-2]/(y_array[-1]-y_array[-2])+x_array[-2]
+
     """#code for plotting fig 2.2 (also set y to 0 above)
     plt.scatter(x_array, y_array, marker="P")
     plt.xlabel("Range (m)")
@@ -73,7 +76,7 @@ def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True
 """#function call for plotting fig 2.2
 integrate(15, 45, 0.1, "euler", air_resistance=False)"""
 
-"""#function call for plotting fig 2.3 (change method parameter to euler-cromer or midpoint)
+"""#function call for plotting fig 2.3 (change method parameter to euler, euler-cromer or midpoint)
 integrate(50, 45, 0.1, "midpoint", air_resistance=True)"""
 
 ###Part 2
