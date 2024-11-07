@@ -15,6 +15,9 @@ def rad(theta):
 def mi_to_m(x):
     return x*1609.34
 
+def ft_to_m(x):
+    return x/3.281
+
 def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True):
     method = method.lower()
     launch_angle = rad(launch_angle)
