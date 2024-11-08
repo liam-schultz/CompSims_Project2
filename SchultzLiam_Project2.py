@@ -19,6 +19,7 @@ def ft_to_m(x):
     return x/3.281
 
 def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True):
+    fence_distance = ft_to_m(400)
     method = method.lower()
     launch_angle = rad(launch_angle)
 
@@ -26,12 +27,14 @@ def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True
     x_array, y_array = [], []
     x, y = 0, 1
     v_x, v_y = inital_speed*np.cos(launch_angle), inital_speed*np.sin(launch_angle)
-    while y >= 0:
+    #condition should be modified for pt 2
+    while x <= fence_distance:
         x_array.append(x)
         y_array.append(y)
         if air_resistance:
-            a = ((-abs(v_x)*C_D*RHO*A*abs(v_x))/(2*MASS),
-                (-abs(v_y)*C_D*RHO*A*abs(v_y))/(2*MASS) - g)
+            a = ((-v_x*C_D*RHO*A*abs(v_x))/(2*MASS),
+                (-v_y*C_D*RHO*A*abs(v_y))/(2*MASS) - g)
+            print(a)
         else:
             a = (0, -g)
 
@@ -55,8 +58,13 @@ def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True
     x_array.append(x)
     y_array.append(y)
 
-    #calculate range
-    return -y_array[-2]*((x_array[-1]-x_array[-2])/(y_array[-1]-y_array[-2])) + x_array[-2]
+    #calculate range (Part 2)
+    #return -y_array[-2]*((x_array[-1]-x_array[-2])/(y_array[-1]-y_array[-2])) + x_array[-2]
+
+    #calculate range (Part 3)
+    print(x_array)
+    print(y_array)
+    return y_array[-2]+(((y_array[-1]-y_array[-2])/(x_array[-1]-x_array[-2]))*(fence_distance-x_array[-2]))
 
     """#code for plotting fig 2.2 (also set y to 0 above)
     plt.scatter(x_array, y_array, marker="P")
@@ -89,10 +97,16 @@ time_step = 0.1
 velocity_dist = miph_to_mps(15 * np.random.randn(samp_num) + 100)
 theta_dist = 10*np.random.randn(samp_num)+45
 
-ranges = np.empty(samp_num)
+"""ranges = np.empty(samp_num)
 for i in range(samp_num):
    ranges[i] = integrate(velocity_dist[i], theta_dist[i], time_step, method="euler", air_resistance=True)
 
 AB_HR = samp_num/len(np.where(ranges>ft_to_m(400))[0])
-print(AB_HR)
+print(AB_HR)"""
+
+###Part 3
+ranges = np.empty(samp_num)
+for i in range(samp_num):
+   ranges[i] = integrate(velocity_dist[i], theta_dist[i], time_step, method="euler", air_resistance=True)
+print(ranges)
 
