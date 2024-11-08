@@ -90,12 +90,9 @@ velocity_dist = miph_to_mps(15 * np.random.randn(samp_num) + 100)
 theta_dist = 10*np.random.randn(samp_num)+45
 
 ranges = np.empty(samp_num)
-#ranges[0] = integrate(velocity_dist[0], theta_dist[0], time_step, method="euler", air_resistance=True)
 for i in range(samp_num):
    ranges[i] = integrate(velocity_dist[i], theta_dist[i], time_step, method="euler", air_resistance=True)
 
-AB_HR = samp_num/len(np.where(ranges>ft_to_m(400)))
-print(ranges)
-print(ft_to_m(400))
+AB_HR = samp_num/len(np.where(ranges>ft_to_m(400))[0])
 print(AB_HR)
 
