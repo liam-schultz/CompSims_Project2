@@ -12,8 +12,8 @@ A = np.pi*(DIAMETER/2)**2
 def rad(theta):
     return theta*np.pi/180
 
-def mi_to_m(x):
-    return x*1609.34
+def miph_to_mps(x):
+    return x*1609.34/3600
 
 def ft_to_m(x):
     return x/3.281
@@ -56,7 +56,7 @@ def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True
     y_array.append(y)
 
     #calculate range
-    return -(x_array[-1]-x_array[-2])*y_array[-2]/(y_array[-1]-y_array[-2])+x_array[-2]
+    return -y_array[-2]*((x_array[-1]-x_array[-2])/(y_array[-1]-y_array[-2])) + x_array[-2]
 
     """#code for plotting fig 2.2 (also set y to 0 above)
     plt.scatter(x_array, y_array, marker="P")
@@ -67,8 +67,8 @@ def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True
     plt.ylim(-1, 7)
     plt.show()"""
 
-    """#code for plotting fig 2.3
-    plt.scatter(x_array, y_array, marker="P")
+    #code for plotting fig 2.3
+    """plt.scatter(x_array, y_array, marker="P")
     plt.xlabel("Range (m)")
     plt.ylabel("Height (m)")
     plt.title("Projectile motion")
@@ -85,6 +85,17 @@ integrate(50, 45, 0.1, "midpoint", air_resistance=True)"""
 ###Part 2
 #generate distributions
 samp_num = 100
-velocity_dist = mi_to_m(15*np.random.randn(samp_num)+100)
+time_step = 0.1
+velocity_dist = miph_to_mps(15 * np.random.randn(samp_num) + 100)
 theta_dist = 10*np.random.randn(samp_num)+45
+
+ranges = np.empty(samp_num)
+#ranges[0] = integrate(velocity_dist[0], theta_dist[0], time_step, method="euler", air_resistance=True)
+for i in range(samp_num):
+   ranges[i] = integrate(velocity_dist[i], theta_dist[i], time_step, method="euler", air_resistance=True)
+
+AB_HR = samp_num/len(np.where(ranges>ft_to_m(400)))
+print(ranges)
+print(ft_to_m(400))
+print(AB_HR)
 
