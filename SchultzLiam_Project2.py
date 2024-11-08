@@ -22,19 +22,20 @@ def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True
     fence_distance = ft_to_m(400)
     method = method.lower()
     launch_angle = rad(launch_angle)
+    lower_y_limit = -10000
 
     #extract the components of the initial velocity and set the initial position
     x_array, y_array = [], []
     x, y = 0, 1
     v_x, v_y = inital_speed*np.cos(launch_angle), inital_speed*np.sin(launch_angle)
-    #condition should be modified for pt 2
-    while x <= fence_distance:
+    #condition should be modified to y>=0 for pt 2
+    while x <= fence_distance and y > lower_y_limit:
         x_array.append(x)
         y_array.append(y)
         if air_resistance:
-            a = ((-v_x*C_D*RHO*A*abs(v_x))/(2*MASS),
-                (-v_y*C_D*RHO*A*abs(v_y))/(2*MASS) - g)
-            print(a)
+            magv = np.sqrt(v_x**2 + v_y**2)
+            a = ((-v_x*C_D*RHO*A*magv)/(2*MASS),
+                (-v_y*C_D*RHO*A*magv)/(2*MASS) - g)
         else:
             a = (0, -g)
 
@@ -62,8 +63,8 @@ def integrate(inital_speed, launch_angle, time_step, method, air_resistance=True
     #return -y_array[-2]*((x_array[-1]-x_array[-2])/(y_array[-1]-y_array[-2])) + x_array[-2]
 
     #calculate range (Part 3)
-    print(x_array)
-    print(y_array)
+    if y <= lower_y_limit:
+        return lower_y_limit
     return y_array[-2]+(((y_array[-1]-y_array[-2])/(x_array[-1]-x_array[-2]))*(fence_distance-x_array[-2]))
 
     """#code for plotting fig 2.2 (also set y to 0 above)
@@ -92,7 +93,7 @@ integrate(50, 45, 0.1, "midpoint", air_resistance=True)"""
 
 ###Part 2
 #generate distributions
-samp_num = 100
+samp_num = 10000
 time_step = 0.1
 velocity_dist = miph_to_mps(15 * np.random.randn(samp_num) + 100)
 theta_dist = 10*np.random.randn(samp_num)+45
@@ -105,8 +106,19 @@ AB_HR = samp_num/len(np.where(ranges>ft_to_m(400))[0])
 print(AB_HR)"""
 
 ###Part 3
+fence_height_num = 50
+fence_heights = np.linspace(0.5, 15, fence_height_num)
+ABHRs = np.empty(fence_height_num)
+
 ranges = np.empty(samp_num)
 for i in range(samp_num):
    ranges[i] = integrate(velocity_dist[i], theta_dist[i], time_step, method="euler", air_resistance=True)
+
 print(ranges)
+
+for i in range(fence_height_num):
+    ABHRs[i] = samp_num / len(np.where(ranges > fence_heights[i])[0])
+
+plt.scatter(fence_heights, ABHRs)
+plt.show()
 
