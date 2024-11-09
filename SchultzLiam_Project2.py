@@ -11,16 +11,30 @@ C_D = 0.35
 A = np.pi*(DIAMETER/2)**2
 
 def rad(theta):
+    """
+    Converts angles from degrees to radians
+    :param theta: an angle in degrees
+    :return: the angle theta in radians
+    """
     return theta*np.pi/180
 
 def miph_to_mps(x):
+    """
+    Converts speeds from miles per hour to meters per second
+    :param x: the speed in miles per hour
+    :return: the speed in meters per second
+    """
     return x*1609.34/3600
 
 def ft_to_m(x):
+    """
+    Converts distances from ft to m
+    :param x: the distance in ft
+    :return: the distance in m
+    """
     return x/3.281
 
-def plot_theoretical(initial_speed, launch_angle, x_final, y_0):
-    x_0 = 0
+def plot_theoretical(initial_speed, launch_angle, y_0):
     v_x, v_y = initial_speed * np.cos(launch_angle), initial_speed * np.sin(launch_angle)
     t_final = (v_y+np.sqrt(v_y**2+2*g*y_0))/g
     time = np.linspace(0, t_final, 100)
@@ -30,8 +44,7 @@ def plot_theoretical(initial_speed, launch_angle, x_final, y_0):
 
 def plot_fig_2_2(x, y, initial_speed, launch_angle):
     # code for plotting fig 2.2 (also set y to 0 in solve)
-    plot_theoretical(initial_speed, launch_angle, x[-1], y[0])
-    plt.scatter(x, y, marker="P")
+    plot_theoretical(initial_speed, launch_angle, x[-1])
     plt.xlabel("Range (m)")
     plt.ylabel("Height (m)")
     plt.title("Projectile motion")
@@ -41,7 +54,7 @@ def plot_fig_2_2(x, y, initial_speed, launch_angle):
     plt.show()
 
 def plot_fig_2_3(x, y, initial_speed, launch_angle, legend):
-    plot_theoretical(initial_speed, launch_angle, x[-1], y[0])
+    plot_theoretical(initial_speed, launch_angle, y[0])
     plt.scatter(x, y, marker="P")
     plt.xlabel("Range (m)")
     plt.ylabel("Height (m)")
@@ -139,11 +152,12 @@ ranges = np.empty(samp_num)
 for i in range(samp_num):
    ranges[i] = solve(velocity_dist[i], theta_dist[i], time_step, method="euler", air_resistance=True)
 
-print(ranges)
-
 for i in range(fence_height_num):
     ABHRs[i] = samp_num / len(np.where(ranges > fence_heights[i])[0])
 
+abhr_func = sp.interpolate.interp1d(fence_heights, ABHRs-10)
+fence_height = sp.optimize.bisect(abhr_func, 0.5, 15)
+print(f"Fence height required for AB/HR <= 10: {fence_height}")
 plt.scatter(fence_heights, ABHRs)
 plt.show()
 
