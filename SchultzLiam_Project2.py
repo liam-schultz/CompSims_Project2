@@ -142,12 +142,12 @@ def solve(initial_speed, launch_angle, time_step, method, air_resistance=True):
     x_array.append(x)
     y_array.append(y)
 
-    #calculate range (Part 2)
-    #return -y_array[-2]*((x_array[-1]-x_array[-2])/(y_array[-1]-y_array[-2])) + x_array[-2]
-
-    #uncomment to plot figures
+    #uncomment to plot figures (Part 1)
     #plot_fig_2_2(x_array, y_array, initial_speed, launch_angle)
     #plot_fig_2_3(x_array, y_array, initial_speed, launch_angle, f"{method} method")
+
+    #calculate range (Part 2)
+    #return -y_array[-2]*((x_array[-1]-x_array[-2])/(y_array[-1]-y_array[-2])) + x_array[-2]
 
     #calculate range (Part 3)
     if y <= lower_y_limit:
@@ -172,10 +172,10 @@ theta_dist = 10*np.random.randn(samp_num)+45
 #compute the AB/HR as specified in part 2
 """ranges = np.empty(samp_num)
 for i in range(samp_num):
-   ranges[i] = solve(velocity_dist[i], theta_dist[i], time_step, method="euler", air_resistance=True)
+    ranges[i] = solve(velocity_dist[i], theta_dist[i], time_step, method="euler", air_resistance=True)
 
 AB_HR = samp_num/len(np.where(ranges>ft_to_m(400))[0])
-print(AB_HR)"""
+print(f"AB/HR ratio for a fence at 0m: {AB_HR}")"""
 
 ###Part 3
 fence_height_num = 50
@@ -193,5 +193,8 @@ abhr_func = sp.interpolate.interp1d(fence_heights, ABHRs-10)
 fence_height = sp.optimize.bisect(abhr_func, 0.5, 15)
 print(f"Fence height required for AB/HR <= 10: {fence_height}")
 plt.scatter(fence_heights, ABHRs)
+plt.title("ABHR vs Fence Height for 10000 baseballs")
+plt.xlabel("Fence Height (m)")
+plt.ylabel("ABHR")
 plt.show()
 
