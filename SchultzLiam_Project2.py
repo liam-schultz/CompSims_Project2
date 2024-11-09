@@ -35,6 +35,13 @@ def ft_to_m(x):
     return x/3.281
 
 def plot_theoretical(initial_speed, launch_angle, y_0):
+    """
+    Plots the theoretical curve for a projectile (i.e no air resistance) given an initial speed, launch angle, and y value (x_0 = 0 is assumed)
+    :param initial_speed: the initial speed of the projectile in meters per second
+    :param launch_angle: the launch angle of the projectile in radians
+    :param y_0: the initial y value of the projectile
+    :return: nothing (this function is specifically for plotting)
+    """
     v_x, v_y = initial_speed * np.cos(launch_angle), initial_speed * np.sin(launch_angle)
     t_final = (v_y+np.sqrt(v_y**2+2*g*y_0))/g
     time = np.linspace(0, t_final, 100)
@@ -43,6 +50,14 @@ def plot_theoretical(initial_speed, launch_angle, y_0):
     plt.plot(x, y)
 
 def plot_fig_2_2(x, y, initial_speed, launch_angle):
+    """
+    Plots figure 2.2 for a given an array of x and y points and the initial speed and launch angle
+    :param x: an array of x coordinates for the solution
+    :param y: an array of y coordinates for the solution
+    :param initial_speed: the initial speed of the projectile in meters per second
+    :param launch_angle: the launch angle of the projectile in radians
+    :return:
+    """
     # code for plotting fig 2.2 (also set y to 0 in solve)
     plot_theoretical(initial_speed, launch_angle, x[-1])
     plt.xlabel("Range (m)")
@@ -54,6 +69,15 @@ def plot_fig_2_2(x, y, initial_speed, launch_angle):
     plt.show()
 
 def plot_fig_2_3(x, y, initial_speed, launch_angle, legend):
+    """
+    plot figure 2.3 for a given an array of x and y points and the initial speed and launch angle
+    :param x: an array of x coordinates for the solution
+    :param y: an array of y coordinates for the solution
+    :param initial_speed: the initial speed of the projectile in meters per second
+    :param launch_angle: the launch angle of the projectile in radians
+    :param legend: the text of the legend entry for the ode solving method
+    :return:
+    """
     plot_theoretical(initial_speed, launch_angle, y[0])
     plt.scatter(x, y, marker="P")
     plt.xlabel("Range (m)")
@@ -65,6 +89,15 @@ def plot_fig_2_3(x, y, initial_speed, launch_angle, legend):
     plt.show()
 
 def solve(initial_speed, launch_angle, time_step, method, air_resistance=True):
+    """
+    Solves for the motion of a projectile with or without air resistance, and returns the range of the projectile
+    :param initial_speed: the initial speed of the projectile in meters per second
+    :param launch_angle: the launch angle of the projectile in degrees
+    :param time_step: the difference in time between each point in the solution in seconds
+    :param method: the solution method to use (euler, euler-cromer, or midpoint)
+    :param air_resistance: whether to include air resistance in the solution (True or False)
+    :return: the height of the ball (in meters) 400ft from where it was launched, or -10000 if the projectile was ever at a height lower than -10000m
+    """
     fence_distance = ft_to_m(400)
     method = method.lower()
     launch_angle = rad(launch_angle)
@@ -104,6 +137,7 @@ def solve(initial_speed, launch_angle, time_step, method, air_resistance=True):
             v_y = v_y + time_step*a[1]
             x = x + time_step*((v_x+v_nx)/2)
             y = y + time_step*((v_y+v_ny)/2)
+        else: break
 
     x_array.append(x)
     y_array.append(y)
